@@ -1,5 +1,32 @@
 {
     "name": "dom-relief",
     "version": "0.1.0",
-    "type": "module"
+    "type": "module",
+    "main": "./dist/lib/lib.js",
+    "module": "./dist/lib/lib.js",
+    "types": "./dist/types/lib.d.ts",
+    "files": [
+        "dist",
+        "styles"
+    ],
+    "sideEffects": [
+        "*.css"
+    ],
+    "scripts": {
+        "types": "tsc",
+        "build:lib": "esbuild src/lib.ts --bundle --format=esm --external:three --outfile=dist/lib/lib.js",
+        "build:browser": "esbuild src/lib.ts --bundle --minify --format=iife --global-name=DOMRelief --sourcemap --outfile=dist/browser/dom-relief.js",
+        "build": "npm run types && npm run build:lib && npm run build:browser",
+        "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test \"./test/*.test.js\""
+    },
+    "peerDependencies": {
+        "three": ">=0.160.0"
+    },
+    "devDependencies": {
+        "@types/three": "^0.169.0",
+        "esbuild": "^0.24.2",
+        "jsdom": "^25.0.1",
+        "three": "^0.169.0",
+        "typescript": "^5.6.3"
+    }
 }
