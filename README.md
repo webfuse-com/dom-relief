@@ -79,6 +79,14 @@ Dispose of a DOM relief object, which means allocated resources are released.
 DOMRelief.dispose(): void
 ```
 
+#### `meta`
+
+Get meta information about the modelled DOMs, e.g., nodes count.
+
+``` ts
+DOMRelief.meta: DOMReliefMeta
+```
+
 ### Configuration
 
 | Option | Description | Type | Default |

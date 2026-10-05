@@ -1,9 +1,10 @@
 import type { ConfigChanges } from "./config.ts";
 import type { ReliefModel } from "./models.ts";
-import type { DOMReliefConfig } from "./types.ts";
+import type { DOMReliefConfig, DOMReliefMeta } from "./types.ts";
 import { DEFAULT_CONFIG, diffConfig, mergeConfig, validateChanges } from "./config.ts";
 import { ModelCache } from "./models.ts";
 import { ReliefScene } from "./scene.ts";
+import { describeModel } from "./meta.ts";
 
 
 export function createDOMRelief(config: Partial<DOMReliefConfig> = {}): DOMRelief {
@@ -20,6 +21,7 @@ export class DOMRelief {
     private readonly models: ModelCache = new ModelCache();
 
     private scene: ReliefScene | null = null;
+    private metaCache: DOMReliefMeta | null = null;
 
     constructor(config: Partial<DOMReliefConfig> = {}) {
         validateChanges(config);
@@ -28,7 +30,13 @@ export class DOMRelief {
     }
 
     private buildModels(): ReliefModel[] {
-        return this.models.build(this.config);
+        const models: ReliefModel[] = this.models.build(this.config);
+
+        this.metaCache = {
+            documents: models.map(describeModel)
+        };
+
+        return models;
     }
 
     private everything(): ConfigChanges {
@@ -80,16 +88,16 @@ export class DOMRelief {
 
         this.config = mergeConfig(previous, changes);
 
-        if(this.scene === null) {
-            return this;
-        }
-
         const diff: ConfigChanges = diffConfig(previous, this.config);
-        /*
-         * Passing documents always re-reads them.
-         */
+        // Passing documents always re-reads them.
         const documentsTouched: boolean = "documents" in changes;
         const rebuild: boolean = documentsTouched || diff.parse || diff.geometry;
+
+        if(rebuild) {
+            this.metaCache = null;
+        }
+
+        if(this.scene === null) return this;
 
         this.scene.apply(this.config, rebuild ? this.buildModels() : null, diff);
 
@@ -107,6 +115,14 @@ export class DOMRelief {
     public dispose() {
         this.detach();
         this.models.clear();
+    }
+
+    public get meta(): DOMReliefMeta {
+        if(this.metaCache === null) {
+            this.buildModels();
+        }
+
+        return this.metaCache as DOMReliefMeta;
     }
 
     public get canvas(): HTMLCanvasElement | null {
