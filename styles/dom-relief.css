@@ -1,0 +1,21 @@
+/*
+ * Optional DOM Relief styles.
+ */
+
+.dom-relief-canvas {
+    display: block;
+}
+
+.dom-relief-fill {
+    width: 100%;
+    height: 100%;
+}
+
+.dom-relief-interactive {
+    cursor: grab;
+    touch-action: none;
+}
+
+.dom-relief-interactive.dom-relief-dragging {
+    cursor: grabbing;
+}
