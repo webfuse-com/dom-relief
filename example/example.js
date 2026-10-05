@@ -7,8 +7,8 @@ const DOCUMENT_A = `
     </nav>
   </header>
   <main>
-    <h1>Title</h1>
-    <p>Some text with <b>bold</b> words.</p>
+    <h1>Foo</h1>
+    <p>Foo is a <b>metasyntactic</b> variable.</p>
   </main>
   <footer>Footer</footer>
 </body>`;
@@ -17,14 +17,14 @@ const DOCUMENT_B = `
   <div class="app">
     <aside>
       <ul>
-		${"<li><a href=\"#\">Item</a></li>".repeat(8)}
+		${"<li><a href=\"#\">Bar</a></li>".repeat(8)}
       </ul>
     </aside>
     <div class="content">
       <div class="row">
         <div class="card">
           <div class="body">
-            <p>Deep</p>
+            <p>Bar is another metasyntactic variable</p>
           </div>
         </div>
       </div>
@@ -35,9 +35,7 @@ const DOCUMENT_B = `
 
 const form = document.getElementById("controls");
 
-const relief = DOMRelief.createDOMRelief({
-	documents: [DOCUMENT_A, DOCUMENT_B]
-})
+const relief = DOMRelief.createDOMRelief()
 	.attach(document.getElementById("view"));
 
 
