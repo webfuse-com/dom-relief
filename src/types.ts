@@ -1,0 +1,72 @@
+export type LayoutMode = "squarified" | "ordered";
+
+export type ColorMode = "category" | "depth" | "tag";
+
+export type Orientation = "vertical" | "horizontal";
+
+export type DocumentSource = string | Document | Element;
+
+export type ParseOptions = Pick<DOMReliefConfig, "skipHead" | "skipScripts" | "textNodes" | "maxNodes" | "maxDepth">;
+
+export type GeometryOptions = Pick<DOMReliefConfig, "layerThickness" | "attributeWeight" | "textWeight" | "gap" | "layout">;
+
+export interface DOMReliefConfig {
+    attributeWeight: number;
+    autoFit: boolean;
+    autoRotate: boolean;
+    background: string;
+    depthMax: number;
+    documents: DocumentSource[];
+    gap: number;
+    gridColor: string;
+    interactive: boolean;
+    layerThickness: number;
+    layout: LayoutMode;
+    maxDepth: number;
+    maxNodes: number;
+    orientation: Orientation;
+    sameScale: boolean;
+    showGrid: boolean;
+    skipHead: boolean;
+    skipScripts: boolean;
+    textNodes: boolean;
+    textWeight: number;
+}
+
+export interface DOMNode {
+    readonly attributeChars: number;
+    readonly attributes: (readonly [string, string])[];
+    readonly children: DOMNode[];
+    readonly depth: number;
+    readonly parent: DOMNode | null;
+    readonly tag: string;
+    readonly textLength: number;
+}
+
+export interface DOMTree {
+    readonly nodeCount: number;
+    readonly root: DOMNode | null;
+    readonly truncated: boolean;
+}
+
+export interface LayoutBlock {
+    readonly elevation: number;
+    readonly index: number;
+    readonly length: number;
+    readonly ownWeight: number;
+    readonly node: DOMNode;
+    readonly thickness: number;
+    readonly weight: number;
+    readonly width: number;
+    readonly x: number;
+    readonly z: number;
+
+    subtreeSize: number;
+}
+
+export interface LayoutResult {
+    readonly blocks: LayoutBlock[];
+    readonly blockByNode: ReadonlyMap<DOMNode, LayoutBlock>;
+    readonly height: number;
+    readonly side: number;
+}
