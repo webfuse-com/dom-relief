@@ -1,5 +1,5 @@
 {
-    "name": "dom-relief",
+    "name": "@webfuse-com/dom-relief",
     "version": "0.1.0",
     "type": "module",
     "main": "./dist/lib/lib.js",

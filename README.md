@@ -19,7 +19,7 @@ Draw and compare abstract 3D DOM models. Works with both live and HTML-serialied
 import { DOMRelief } from "dom-relief";
 
 const relief: DOMRelief = new DOMRelief({
-  documents: [ pricingPageHTML, featuresPageHTML ]
+  documents: [ htmlGoogle, htmlBing ]
 });
 
 relief.attach(document.querySelector("CANVAS"));
@@ -27,7 +27,6 @@ relief.attach(document.querySelector("CANVAS"));
 relief.update("orientation", "vertical");
 relief.update({
   background: "#FFF",
-  depthMax: 10,
   showGrid: false
 });
 ```
