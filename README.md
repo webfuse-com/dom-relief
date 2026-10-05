@@ -101,10 +101,11 @@ DOMRelief.meta: DOMReliefMeta
 | `gridColor` | Set the grid lines to any CSS color. | `string` | `"#DADDE0"` |
 | `interactive` | Let the pointer rotate, pan and zoom the view, and double-click refit it. | `boolean` | `true` |
 | `layerThickness` | Set the thickness of every layer, so elevation equals depth times thickness. | `number` | `2.0` |
-| `layout` | Arrange children in document order (`"ordered"`) or as size-sorted tiles (`"squarified"`). | `LayoutMode` | `"ordered"` |
+| `layout` | Arrange children in document order (`"ordered"`) or as size-sorted tiles (`"squarified"`). | `Layout` | `"ordered"` |
 | `maxDepth` | Stop descending below this depth. | `number` | `300` |
 | `maxNodes` | Stop parsing a document after this many nodes. | `number` | `40000` |
 | `orientation` | Lay the models flat (`"horizontal"`) or stand them up like a screen (`"vertical"`). | `Orientation` | `"horizontal"` |
+| `projection` | Render with depth (`"perspective"`) or true relative sizes (`"orthographic"`). | `Projection` | `"perspective"` |
 | `sameScale` | Draw all documents in the same units, or give each the same footprint when off. | `boolean` | `true` |
 | `showGrid` | Show the grid as a floor or back wall. | `boolean` | `true` |
 | `skipHead` | Start at `<body>` instead of `<html>`. | `boolean` | `true` |
@@ -124,7 +125,7 @@ interface DOMReliefConfig {
   gridColor: string;
   interactive: boolean;
   layerThickness: number;
-  layout: LayoutMode;
+  layout: Layout;
   maxDepth: number;
   maxNodes: number;
   orientation: Orientation;

@@ -1,13 +1,10 @@
-export type LayoutMode = "squarified" | "ordered";
-
-export type ColorMode = "category" | "depth" | "tag";
-
+export type Layout = "squarified" | "ordered";
 export type Orientation = "vertical" | "horizontal";
+export type Projection = "perspective" | "orthographic";
 
 export type DocumentSource = string | Document | Element;
 
 export type ParseOptions = Pick<DOMReliefConfig, "skipHead" | "skipScripts" | "textNodes" | "maxNodes" | "maxDepth">;
-
 export type GeometryOptions = Pick<DOMReliefConfig, "layerThickness" | "attributeWeight" | "textWeight" | "gap" | "layout">;
 
 export interface DOMNode {
@@ -59,10 +56,11 @@ export interface DOMReliefConfig {
     gridColor: string;
     interactive: boolean;
     layerThickness: number;
-    layout: LayoutMode;
+    layout: Layout;
     maxDepth: number;
     maxNodes: number;
     orientation: Orientation;
+    projection: Projection;
     sameScale: boolean;
     showGrid: boolean;
     skipHead: boolean;

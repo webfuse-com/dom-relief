@@ -70,6 +70,10 @@ const CHOICES: Partial<Record<ConfigKey, readonly string[]>> = {
     orientation: [
         "horizontal",
         "vertical"
+    ],
+    projection: [
+        "perspective",
+        "orthographic"
     ]
 };
 
@@ -89,6 +93,7 @@ export const DEFAULT_CONFIG: Readonly<DOMReliefConfig> = {
     maxDepth: 300,
     maxNodes: 40000,
     orientation: "horizontal",
+    projection: "perspective",
     sameScale: true,
     showGrid: true,
     skipHead: true,

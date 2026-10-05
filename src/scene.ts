@@ -8,6 +8,7 @@ import {
     LineBasicMaterial,
     Matrix4,
     MeshStandardMaterial,
+    OrthographicCamera,
     PCFSoftShadowMap,
     PerspectiveCamera,
     Quaternion,
@@ -63,11 +64,12 @@ const EDGE_FRAGMENT: string = `
 
 
 export class ReliefScene {
+    private readonly orthoCamera: OrthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 10000);
     private readonly ownsCanvas: boolean;
     private readonly sizeSource: HTMLElement;
     private readonly renderer: WebGLRenderer;
     private readonly scene: Scene = new Scene();
-    private readonly camera: PerspectiveCamera = new PerspectiveCamera(38, 1, 0.1, 10000);
+    private readonly perspectiveCamera: PerspectiveCamera = new PerspectiveCamera(38, 1, 0.1, 10000);
     private readonly orbit: OrbitController;
     private readonly geometry: BoxGeometry = new BoxGeometry(1, 1, 1);
     private readonly material: MeshStandardMaterial = new MeshStandardMaterial({
@@ -120,7 +122,7 @@ export class ReliefScene {
 
         this.scene.add(new HemisphereLight(0xffffff, 0x50566a, 0.55 * Math.PI), this.sun, this.fill);
 
-        this.orbit = new OrbitController(this.camera, this.canvas, {
+        this.orbit = new OrbitController(this.perspectiveCamera, this.canvas, {
             onChange: () => this.requestRender(),
             onDoubleClick: () => this.fit()
         });
@@ -286,8 +288,8 @@ export class ReliefScene {
             this.renderer.setSize(width, height, false);
         }
 
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
+        this.perspectiveCamera.aspect = width / height;
+        this.perspectiveCamera.updateProjectionMatrix();
 
         this.requestRender();
     }
@@ -307,7 +309,31 @@ export class ReliefScene {
         this.dirty = false;
 
         this.orbit.apply();
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.activeCamera());
+    }
+
+    /*
+     * The orthographic camera follows the orbit and shows the target plane at the same size.
+     */
+    private activeCamera(): PerspectiveCamera | OrthographicCamera {
+        if(this.config.projection === "perspective") {
+            return this.perspectiveCamera;
+        }
+
+        const halfHeight: number = this.orbit.radius * Math.tan((this.perspectiveCamera.fov * Math.PI) / 360);
+        const halfWidth: number = halfHeight * this.perspectiveCamera.aspect;
+
+        this.orthoCamera.left = -halfWidth;
+        this.orthoCamera.right = halfWidth;
+        this.orthoCamera.top = halfHeight;
+        this.orthoCamera.bottom = -halfHeight;
+        this.orthoCamera.near = -this.perspectiveCamera.far;
+        this.orthoCamera.far = this.perspectiveCamera.far;
+        this.orthoCamera.position.copy(this.perspectiveCamera.position);
+        this.orthoCamera.quaternion.copy(this.perspectiveCamera.quaternion);
+        this.orthoCamera.updateProjectionMatrix();
+
+        return this.orthoCamera;
     }
 
     /*
@@ -364,8 +390,8 @@ export class ReliefScene {
             maxHeight = Math.max(maxHeight, model.layout.height * model.scale);
         }
 
-        const aspect: number = Math.max(0.2, this.camera.aspect);
-        const tangent: number = Math.tan((this.camera.fov * Math.PI) / 360);
+        const aspect: number = Math.max(0.2, this.perspectiveCamera.aspect);
+        const tangent: number = Math.tan((this.perspectiveCamera.fov * Math.PI) / 360);
         const spanWidth: number = (maxX - minX) * 1.08;
 
         if(this.config.orientation === "vertical") {
