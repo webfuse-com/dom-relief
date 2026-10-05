@@ -2,13 +2,18 @@
 
 DOM structure visualiser based on general node feature footprints.
 
+<a href="#example">
+  <img src="./.github/readme.png" alt="Reliefs comparing the landing page DOMs of bbc.com and cnn.com">
+</a>
+<br><br>
+
 ``` console
 npm install webfuse-com/dom-relief
 ```
 
 ### Example
 
-Draw and compare abstract 3D DOM-models to  a `CANVAS` element. Accepts both live and HTML-serialied DOM instances.
+Draw and compare abstract 3D DOM-models. Works with both live and HTML-serialied DOM-instances.
 
 ```ts
 import { DOMRelief } from "dom-relief";
@@ -21,11 +26,13 @@ relief.attach(document.querySelector("CANVAS"));
 
 relief.update("orientation", "vertical");
 relief.update({
-  background: "#000",
+  background: "#FFF",
   depthMax: 10,
   showGrid: false
 });
 ```
+
+> Open [example/example.html](./example/example.html) in a browser to use the interactive example application.
 
 ### API
 
@@ -37,9 +44,9 @@ Create a DOM relief object with [configuration](#configuration) overrides.
 new DOMRelief(config?: Partial<DOMReliefConfig>)
 ```
 
-> ``` ts
-> function createDOMRelief(config?: Partial<DOMReliefConfig>): DOMRelief
-> ```
+``` ts
+function createDOMRelief(config?: Partial<DOMReliefConfig>): DOMRelief
+```
 
 #### `attach()`, `detach()`
 
@@ -122,7 +129,7 @@ interface DOMReliefConfig {
 }
 ```
 
-### Definition of a Footprint
+### Definition of _Footprint_
 
 The **footprint** `A` of an element *e* is the base area (horizontal orientation) of its block in the layout plane:
 
@@ -154,6 +161,8 @@ W(e) = W_own(e) + Σ W(c)
 W_own(e) = 1 + 0.45 · attributeWeight · ln(1 + n_attr(e)) + 0.45 · textWeight · ln(1 + n_text(e))
 ```
 
-`n_attr(e)` is the combined length of all attribute names and values of *e*, and `n_text(e)` is the length of the trimmed text directly inside *e*.
+`n_attr` is the combined length of all attribute names and values of *e*, and `n_text` is the length of the trimmed text directly inside *e*.
 
-A footprint is exactly proportional to weight among siblings, whilst `A / W` falls slightly below 1 with each nesting level. Unless `sameScale` is used with the API, each root is scaled to side 24, i.e. `A(root) = 576`.
+A footprint is exactly proportional to weight among siblings, whilst `A / W` falls slightly below 1 with each nesting level.
+
+> Unless `sameScale` is used with the API, each root is scaled to side 24, i.e. `A(root) = 576`.
