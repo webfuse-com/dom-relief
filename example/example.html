@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Example | DOM Relief</title>
+        <link rel="stylesheet" href="../styles/dom-relief.css">
+        <link rel="stylesheet" href="./example.css">
+        <script src="../dist/browser/dom-relief.js"></script>
+    </head>
+    <body>
+        <main class="playground">
+            <form id="controls" class="controls">
+                <h1>DOM Relief</h1>
+                <label>
+                    Document A <small id="document-a-size"></small>
+                    <textarea name="document-a" rows="6"></textarea>
+                </label>
+                <label>
+                    Document B <small id="document-b-size"></small>
+                    <textarea name="document-b" rows="6"></textarea>
+                </label>
+                <label>
+                    <div>
+                        Depth Color Ceiling: <output name="depthMaxValue"></output>
+                    </div>
+                    <input name="depthMax" type="range" min="1" max="20">
+                </label>
+                <label>
+                    Layer Thickness
+                    <input name="layerThickness" type="range" min="0.2" max="4" step="0.1">
+                </label>
+                <label>
+                    Gap
+                    <input name="gap" type="range" min="0" max="1.5" step="0.05">
+                </label>
+                <label>
+                    Layout
+                    <div>
+                        <input type="radio" name="layout" value="ordered"> Document order
+                        <input type="radio" name="layout" value="squarified"> Squarified
+                    </div>
+                </label>
+                <label>
+                    Orientation
+                    <div>
+                        <input type="radio" name="orientation" value="horizontal"> Horizontal
+                        <input type="radio" name="orientation" value="vertical"> Vertical
+                    </div>
+                </label>
+                <label>
+                    <div>
+                        <input name="showGrid" type="checkbox"> Grid
+                    </div>
+                </label>
+                <label>
+                    <div>
+                        <input name="sameScale" type="checkbox"> Same scale
+                    </div>
+                </label>
+                <label>
+                    <div>
+                        <input name="autoRotate" type="checkbox"> Rotate
+                    </div>
+                </label>
+                <label>
+                    Background
+                    <input name="background" type="color">
+                </label>
+            </form>
+            <canvas id="view" class="view"></canvas>
+        </main>
+        <script src="./example.js"></script>
+    </body>
+</html>
