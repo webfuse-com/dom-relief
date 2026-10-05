@@ -3,7 +3,7 @@
 DOM structure visualiser based on general node feature footprints<sup>1</sup>.
 
 <a href="#example">
-  <img src="./.github/readme.png" alt="Reliefs comparing the landing page DOMs of google.com and bing.com">
+  <img src="./.github/readme-1.png" alt="Reliefs comparing the landing page DOMs of google.com and bing.com">
 </a>
 <br><br>
 
@@ -138,6 +138,82 @@ interface DOMReliefConfig {
 }
 ```
 
+### Interpretation
+
+``` html
+<body>
+  <!-- square layer -->
+  <main>
+    <!-- exposed surface -->
+    <p>
+      A paragraph with much more direct text than anything else on this page.
+      <a href="#">more</a>
+    </p>
+    <!-- plateau stack of thin layers -->
+    <ul>
+      <li>a</li><li>b</li><li>c</li><li>d</li>
+      <li>e</li><li>f</li><li>g</li><li>h</li>
+    </ul>
+    <!-- narrow stack -->
+    <div><div><div>
+      <div><div><div>
+        <span>x</span>
+      </div></div></div>
+    </div></div></div>
+    <!-- concentric stack -->
+    <div>
+      <div>
+        <ol>
+          <li>1</li><li>2</li><li>3</li><li>4</li>
+        </ol>
+      </div>
+    </div>
+    <!-- regular stacks -->
+    <section>
+      <div><b>T</b><i>t</i></div>
+      <div><b>T</b><i>t</i></div>
+      <div><b>T</b><i>t</i></div>
+      <div><b>T</b><i>t</i></div>
+    </section>
+    <!-- asymmetric stacks -->
+    <section>
+      <form>
+        <input>
+        <button>Go</button>
+      </form>
+      <img src="a.png" alt="">
+      <blockquote>A quote with noticeably more text than its siblings.</blockquote>
+    </section>
+  </main>
+  <footer>©</footer>
+</body>
+```
+
+<br>
+<a href="#interpretation">
+  <img src="./.github/readme-2.png" alt="DOM relief representative for characteristic DOM structure patterns" width="400">
+</a>
+
+#### Per Layer
+
+| Layer | Meaning | Example |
+| :- | :- | :- |
+| **Thin** | Sibling crowding: a tiny sibling among large ones (squarified) or one of many siblings (document order) | badges, list items, table rows |
+| **Square** | Dominance: a child holding most of its parent's content | `<main>` in `<body>` |
+| **Exposed-Surface** | Own content: the direct text and attributes of the element itself | `<p>` with inline tags |
+| **Covered-Surface** | Pure containment: content located entirely in the children | layout `<div>`s, `<section>`, `<ul>` |
+| **Empty-Surface** | Leaf status: the absence of child elements | `<img>`, `<input>`, text-only `<a>` |
+
+#### Per Stack
+
+| Stack | Meaning | Example |
+| :- | :- | :- |
+| **Narrow** | Sparse depth: many levels with little content | wrapper chains, nested components |
+| **Concentric** | Single-child chains: one child per parent across several levels | framework root wrappers |
+| **Plateau** | Shallow breadth: many siblings with little nesting | flat lists, long table bodies |
+| **Regular** | Sibling similarity: repeated components with equal content | card grids, table rows |
+| **Asymmetric** | Sibling diversity: heterogeneous siblings with unequal content | mixed sections, forms |
+
 ### <sup>1</sup> Definition of _Footprint_
 
 The **footprint** `A` of an element *e* is the base area (horizontal orientation) of its block in the layout plane:
@@ -173,5 +249,3 @@ W_own(e) = 1 + 0.45 · attributeWeight · ln(1 + n_attr(e)) + 0.45 · textWeight
 `n_attr` is the combined length of all attribute names and values of *e*, and `n_text` is the length of the trimmed text directly inside *e*.
 
 A footprint is exactly proportional to weight among siblings, whilst `A / W` falls slightly below 1 with each nesting level.
-
-> Unless `sameScale` is used with the API, each root is scaled to side 24, i.e. `A(root) = 576`.
