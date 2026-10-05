@@ -1,9 +1,9 @@
 # DOM Relief
 
-DOM structure visualiser based on general node feature footprints.
+DOM structure visualiser based on general node feature footprints<sup>1</sup>.
 
 <a href="#example">
-  <img src="./.github/readme.png" alt="Reliefs comparing the landing page DOMs of bbc.com and cnn.com">
+  <img src="./.github/readme.png" alt="Reliefs comparing the landing page DOMs of google.com and bing.com">
 </a>
 <br><br>
 
@@ -13,7 +13,7 @@ npm install webfuse-com/dom-relief
 
 ### Example
 
-Draw and compare abstract 3D DOM-models. Works with both live and HTML-serialied DOM-instances.
+Draw and compare abstract 3D DOM models. Works with both live and HTML-serialied DOM-instances.
 
 ```ts
 import { DOMRelief } from "dom-relief";
@@ -129,6 +129,7 @@ interface DOMReliefConfig {
   maxDepth: number;
   maxNodes: number;
   orientation: Orientation;
+  projection: Projection;
   sameScale: boolean;
   showGrid: boolean;
   skipHead: boolean;
@@ -138,7 +139,7 @@ interface DOMReliefConfig {
 }
 ```
 
-### Definition of _Footprint_
+### <sup>1</sup> Definition of _Footprint_
 
 The **footprint** `A` of an element *e* is the base area (horizontal orientation) of its block in the layout plane:
 
