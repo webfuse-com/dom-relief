@@ -21,6 +21,11 @@ export declare class ReliefScene {
     private dirty;
     private frame;
     private disposed;
+    private settleFrame;
+    private appliedWidth;
+    private appliedHeight;
+    private pendingWidth;
+    private pendingHeight;
     readonly canvas: HTMLCanvasElement;
     constructor(target: HTMLCanvasElement | HTMLElement, config: Readonly<DOMReliefConfig>);
     private buildMeshes;
@@ -29,6 +34,8 @@ export declare class ReliefScene {
     private place;
     private buildGrid;
     private removeGrid;
+    private scheduleResize;
+    private settle;
     private resize;
     private loop;
     private activeCamera;

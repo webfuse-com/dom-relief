@@ -88,6 +88,11 @@ export class ReliefScene {
     private dirty: boolean = true;
     private frame: number = 0;
     private disposed: boolean = false;
+    private settleFrame: number = 0;
+    private appliedWidth: number = -1;
+    private appliedHeight: number = -1;
+    private pendingWidth: number = -1;
+    private pendingHeight: number = -1;
 
     public readonly canvas: HTMLCanvasElement;
 
@@ -127,8 +132,12 @@ export class ReliefScene {
             onDoubleClick: () => this.fit()
         });
 
-        this.resizeObserver = new ResizeObserver(() => this.resize());
+        this.resizeObserver = new ResizeObserver(() => this.scheduleResize());
         this.resizeObserver.observe(this.sizeSource);
+
+        if(this.sizeSource.parentElement !== null) {
+            this.resizeObserver.observe(this.sizeSource.parentElement);
+        }
 
         this.resize();
         this.loop();
@@ -271,27 +280,61 @@ export class ReliefScene {
         this.grid = null;
     }
 
+    private scheduleResize() {
+        cancelAnimationFrame(this.settleFrame);
+        this.settleFrame = requestAnimationFrame(() => this.settle());
+    }
+
+    private settle() {
+        const width: number = this.sizeSource.clientWidth;
+        const height: number = this.sizeSource.clientHeight;
+
+        if(width === this.appliedWidth && height === this.appliedHeight) {
+            return;
+        }
+
+        if(width !== this.pendingWidth || height !== this.pendingHeight) {
+            this.pendingWidth = width;
+            this.pendingHeight = height;
+            this.settleFrame = requestAnimationFrame(() => this.settle());
+
+            return;
+        }
+
+        this.resize();
+    }
+
     private resize() {
-        const width: number = Math.max(1, this.sizeSource.clientWidth || this.canvas.width);
-        const height: number = Math.max(1, this.sizeSource.clientHeight || this.canvas.height);
-        const before: number = this.canvas.clientWidth;
+        this.canvas.width = 0;
+        this.canvas.height = 0;
+
+        if(this.sizeSource.clientWidth < 2 || this.sizeSource.clientHeight < 2) {
+            this.canvas.width = 300;
+            this.canvas.height = 150;
+        }
+
+        const width: number = Math.max(1, this.sizeSource.clientWidth);
+        const height: number = Math.max(1, this.sizeSource.clientHeight);
 
         this.renderer.setSize(width, height, false);
 
-        // Keeps a canvas without CSS size from growing with the pixel ratio.
         if(
-            !this.ownsCanvas
-            && this.canvas.clientWidth !== before
+            (this.sizeSource.clientWidth !== width || this.sizeSource.clientHeight !== height)
             && this.renderer.getPixelRatio() !== 1
         ) {
             this.renderer.setPixelRatio(1);
             this.renderer.setSize(width, height, false);
         }
 
-        this.perspectiveCamera.aspect = width / height;
+        this.appliedWidth = this.sizeSource.clientWidth;
+        this.appliedHeight = this.sizeSource.clientHeight;
+        this.pendingWidth = -1;
+        this.pendingHeight = -1;
+        this.perspectiveCamera.aspect = Math.max(1, this.canvas.clientWidth) / Math.max(1, this.canvas.clientHeight);
         this.perspectiveCamera.updateProjectionMatrix();
 
-        this.requestRender();
+        this.orbit.apply();
+        this.renderer.render(this.scene, this.activeCamera());
     }
 
     private loop() {
@@ -423,6 +466,7 @@ export class ReliefScene {
         this.disposed = true;
 
         cancelAnimationFrame(this.frame);
+        cancelAnimationFrame(this.settleFrame);
 
         this.resizeObserver.disconnect();
         this.orbit.disable();
